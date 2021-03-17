@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/avatar/assets/css/style.css?v=784fc3a09ae9933575eb6e2384e6b2477f37f825">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Avatar API | avatar</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Avatar API" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:site_name" content="avatar" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"Avatar API","url":"/avatar/docs/api/","description":"A modern compile-time generated interception/proxy library","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/devlooped/avatar">View on GitHub</a>
+
+          <h1 id="project_title">avatar</h1>
+          <h2 id="project_tagline">A modern compile-time generated interception/proxy library</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1 id="avatar-api">Avatar API</h1>
+
+<p>Main entry point API is <code class="language-plaintext highlighter-rouge">Avatar.Of&lt;T&gt;</code>, which creates an object that implements <code class="language-plaintext highlighter-rouge">T</code>:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ICalculator</span> <span class="n">calculator</span> <span class="p">=</span> <span class="n">Avatar</span><span class="p">.</span><span class="n">Of</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;();</span>
+
+<span class="c1">// Extension methods to easily add behaviors without having </span>
+<span class="c1">// to cast to IAvatar</span>
+<span class="n">calculator</span><span class="p">.</span><span class="nf">AddBehavior</span><span class="p">((</span><span class="n">invocation</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">...);</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">calculator</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">5</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>There are overloads for implementing additional types, as well as passing constructor 
+arguments if the base type <code class="language-plaintext highlighter-rouge">T</code> (which must be the first in the list, like in regular 
+C# type declarations) is a class that provides a constructor with matching parameters: 
+<code class="language-plaintext highlighter-rouge">Avatar.Of&lt;T, T1...Tn&gt;(arg1, ... argn)</code></p>
+
+<p>For anonymous behaviors, the delegate/lambda based overloads are typically sufficient. 
+For more advanced or reusable behaviors, you can implement <code class="language-plaintext highlighter-rouge">IAvatarBehavior</code> instead.</p>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">avatar maintained by <a href="https://github.com/devlooped">devlooped</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>
