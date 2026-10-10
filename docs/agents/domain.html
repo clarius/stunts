@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/stunts/assets/css/style.css?v=06335a3bf1af0d0a91d8bbe601a51dca0248c03c">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Domain Docs | stunts</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Domain Docs" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:site_name" content="stunts" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Domain Docs" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"A modern compile-time generated interception/proxy library","headline":"Domain Docs","url":"/stunts/docs/agents/domain.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/stunts/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          
+            <a id="forkme_banner" href="https://github.com/devlooped/stunts">View on GitHub</a>
+          
+
+          <h1 id="project_title">stunts</h1>
+          <h2 id="project_tagline">A modern compile-time generated interception/proxy library</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1 id="domain-docs">Domain Docs</h1>
+
+<p>How the engineering skills should consume this repo’s domain documentation when exploring the codebase.</p>
+
+<h2 id="before-exploring-read-these">Before exploring, read these</h2>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">GLOSSARY.md</code></strong> at the repo root, or</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">GLOSSARY-MAP.md</code></strong> at the repo root if it exists: it points at one <code class="language-plaintext highlighter-rouge">GLOSSARY.md</code> per context. Read each one relevant to the topic.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">docs/adr/</code></strong>: read ADRs that touch the area you’re about to work in. In multi-context repos, also check <code class="language-plaintext highlighter-rouge">src/&lt;context&gt;/docs/adr/</code> for context-scoped decisions.</li>
+</ul>
+
+<p>If any of these files don’t exist, <strong>proceed silently</strong>. Don’t flag their absence; don’t suggest creating them upfront. The <code class="language-plaintext highlighter-rouge">/domain-modeling</code> skill (reached via <code class="language-plaintext highlighter-rouge">/grill-with-docs</code> and <code class="language-plaintext highlighter-rouge">/improve-codebase-architecture</code>) creates them lazily when terms or decisions actually get resolved.</p>
+
+<h2 id="file-structure">File structure</h2>
+
+<p>Single-context repo (most repos):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/
+├── GLOSSARY.md
+├── docs/adr/
+│   ├── 0001-event-sourced-orders.md
+│   └── 0002-postgres-for-write-model.md
+└── src/
+</code></pre></div></div>
+
+<p>Multi-context repo (presence of <code class="language-plaintext highlighter-rouge">GLOSSARY-MAP.md</code> at the root):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/
+├── GLOSSARY-MAP.md
+├── docs/adr/                          ← system-wide decisions
+└── src/
+    ├── ordering/
+    │   ├── GLOSSARY.md
+    │   └── docs/adr/                  ← context-specific decisions
+    └── billing/
+        ├── GLOSSARY.md
+        └── docs/adr/
+</code></pre></div></div>
+
+<h2 id="use-the-glossarys-vocabulary">Use the glossary’s vocabulary</h2>
+
+<p>When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in <code class="language-plaintext highlighter-rouge">GLOSSARY.md</code>. Don’t drift to synonyms the glossary explicitly avoids.</p>
+
+<p>If the concept you need isn’t in the glossary yet, that’s a signal: either you’re inventing language the project doesn’t use (reconsider) or there’s a real gap (note it for <code class="language-plaintext highlighter-rouge">/domain-modeling</code>).</p>
+
+<h2 id="flag-adr-conflicts">Flag ADR conflicts</h2>
+
+<p>If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:</p>
+
+<blockquote>
+  <p><em>Contradicts ADR-0007 (event-sourced orders), but worth reopening because…</em></p>
+</blockquote>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">stunts maintained by <a href="https://github.com/devlooped">devlooped</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

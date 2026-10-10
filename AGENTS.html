@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/stunts/assets/css/style.css?v=06335a3bf1af0d0a91d8bbe601a51dca0248c03c">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Stunts design notes | stunts</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Stunts design notes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:site_name" content="stunts" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Stunts design notes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"A modern compile-time generated interception/proxy library","headline":"Stunts design notes","url":"/stunts/AGENTS.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/stunts/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          
+            <a id="forkme_banner" href="https://github.com/devlooped/stunts">View on GitHub</a>
+          
+
+          <h1 id="project_title">stunts</h1>
+          <h2 id="project_tagline">A modern compile-time generated interception/proxy library</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1 id="stunts-design-notes">Stunts design notes</h1>
+
+<h2 id="behavior-configuration-api">Behavior configuration API</h2>
+
+<p><code class="language-plaintext highlighter-rouge">AddBehavior</code>/<code class="language-plaintext highlighter-rouge">InsertBehavior</code> (in <code class="language-plaintext highlighter-rouge">src/Stunts/StuntExtensions.cs</code>) are generic extension
+methods constrained to <code class="language-plaintext highlighter-rouge">IStunt</code>:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="n">TStunt</span> <span class="n">AddBehavior</span><span class="p">&lt;</span><span class="n">TStunt</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">TStunt</span> <span class="n">stunt</span><span class="p">,</span> <span class="p">...)</span> <span class="k">where</span> <span class="n">TStunt</span> <span class="p">:</span> <span class="n">IStunt</span>
+</code></pre></div></div>
+
+<p>The constraint makes the API discoverable only on actual stunts (instead of any object), and
+the generic type parameter preserves the concrete receiver type so calls can be chained.</p>
+
+<h2 id="stuntof-vs-stuntfor-vs-stuntget"><code class="language-plaintext highlighter-rouge">Stunt.Of</code> vs <code class="language-plaintext highlighter-rouge">Stunt.For</code> vs <code class="language-plaintext highlighter-rouge">Stunt.Get</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">src/Stunts.Package/Stunt.cs</code> ships as content into consuming projects and is the
+<code class="language-plaintext highlighter-rouge">[StuntGenerator]</code>-annotated factory API:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>API</th>
+      <th>Returns</th>
+      <th>Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;(...)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">T</code></td>
+      <td>Just the stunt, no behavior configuration needed</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Stunt.For&lt;T&gt;(...)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code></td>
+      <td>Create and configure behaviors</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Stunt.Get&lt;T&gt;(T stunt)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code></td>
+      <td>Configure an already created stunt</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Stunt.Builder()</code></td>
+      <td><code class="language-plaintext highlighter-rouge">StuntBuilder</code></td>
+      <td>Configure behaviors once, build many stunts</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code> implements <code class="language-plaintext highlighter-rouge">IStunt</code>, so the behavior extension methods apply to it
+directly, and exposes the stunt via <code class="language-plaintext highlighter-rouge">ToObject()</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Stunt.For&lt;T&gt;</code> passes a <code class="language-plaintext highlighter-rouge">Lazy&lt;T&gt;</code>. The stunt is constructed on the first <code class="language-plaintext highlighter-rouge">ToObject()</code> call
+(the implicit conversion calls <code class="language-plaintext highlighter-rouge">ToObject()</code> too). That call installs the behaviors configured
+so far with <code class="language-plaintext highlighter-rouge">BehaviorPipelineFactory.UseAmbient</code>, so virtual members invoked from a base
+constructor are intercepted. If none were added, the factory already current at that call is
+used. After construction, <code class="language-plaintext highlighter-rouge">Behaviors</code> forwards to the stunt’s own pipeline. <code class="language-plaintext highlighter-rouge">Stunt.Get&lt;T&gt;</code>
+still wraps an already constructed instance and forwards <code class="language-plaintext highlighter-rouge">Behaviors</code> immediately.</p>
+
+<p>An implicit conversion to <code class="language-plaintext highlighter-rouge">T</code> is also declared, but <strong>C# does not allow user-defined
+conversions to interface types</strong>, so it only kicks in for class and delegate stunts. Since most
+stunts are interfaces, <code class="language-plaintext highlighter-rouge">ToObject()</code> is the usage pattern tests and docs should show. This
+limitation is why <code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;</code> keeps returning <code class="language-plaintext highlighter-rouge">T</code> instead of the reference type.</p>
+
+<p>Delegate stunts are unwrapped when the instance is materialized: for a delegate <code class="language-plaintext highlighter-rouge">T</code>, the
+generated stunt is the delegate’s <code class="language-plaintext highlighter-rouge">Target</code>.</p>
+
+<p>The VB content file (<code class="language-plaintext highlighter-rouge">src/Stunts.Package/Stunt.vb</code>) mirrors the C# one: <code class="language-plaintext highlighter-rouge">StuntReference(Of T)</code>,
+<code class="language-plaintext highlighter-rouge">StuntBuilder</code>, <code class="language-plaintext highlighter-rouge">Get</code>, and the <code class="language-plaintext highlighter-rouge">Of</code>/<code class="language-plaintext highlighter-rouge">For</code>/<code class="language-plaintext highlighter-rouge">Build</code> overloads (including the delegate ones), with two
+VB-specific notes:</p>
+
+<ul>
+  <li>VB cannot constrain a type parameter to <code class="language-plaintext highlighter-rouge">System.Delegate</code> (BC32061), so the delegate <code class="language-plaintext highlighter-rouge">Of</code>/<code class="language-plaintext highlighter-rouge">For</code>
+overloads are declared as <code class="language-plaintext highlighter-rouge">(Of T)(implementation As T)</code> without a constraint. Behavior is
+identical (the argument is passed as the single constructor argument), but a call passing a
+lone <code class="language-plaintext highlighter-rouge">Nothing</code> (e.g. <code class="language-plaintext highlighter-rouge">Stunt.Of(Of IFoo)(Nothing)</code>) is ambiguous: use
+<code class="language-plaintext highlighter-rouge">Stunt.Of(Of IFoo)(New Object() {Nothing})</code>. The overload is kept because it’s what gives
+lambdas their parameter type inference in <code class="language-plaintext highlighter-rouge">Stunt.Of(Of MyDelegate)(Function(x, y) x + y)</code>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">Widening</code> conversion to <code class="language-plaintext highlighter-rouge">T</code> has the same interface limitation as C# (BC30512 under
+<code class="language-plaintext highlighter-rouge">Option Strict On</code>), so <code class="language-plaintext highlighter-rouge">ToObject()</code> is the pattern to show.</li>
+</ul>
+
+<p>There is no VB project in the solution, so changes to this file are validated by compiling it
+in a scratch VB project referencing <code class="language-plaintext highlighter-rouge">src/Stunts/bin/Debug/netstandard2.0/Stunts.dll</code>.</p>
+
+<p>Every factory overload (including the <code class="language-plaintext highlighter-rouge">For</code> and <code class="language-plaintext highlighter-rouge">Build</code> ones) must carry <code class="language-plaintext highlighter-rouge">[StuntGenerator]</code>: the source
+generator keys off that attribute on the invoked method (instance or static) and uses the call site’s
+generic type arguments to decide which stunt types to generate.</p>
+
+<h3 id="generic-wrappers">Generic wrappers</h3>
+
+<p>Every generated stunt is a closed, non-generic type: there are no open generic templates.
+A generic method passing its own type parameters to a generator method (e.g.
+<code class="language-plaintext highlighter-rouge">static IDictionary&lt;string, T&gt; Make&lt;T&gt;() =&gt; Stunt.Of&lt;IDictionary&lt;string, T&gt;&gt;()</code>) is a <em>wrapper</em>
+and must itself carry <code class="language-plaintext highlighter-rouge">[StuntGenerator]</code> (<code class="language-plaintext highlighter-rouge">ST016</code>, with a code fix adding the attribute).
+<code class="language-plaintext highlighter-rouge">StuntClosure</code> (shared by analyzers and the generator) computes each wrapper’s <em>stunt definitions</em>: the
+stunt types it creates expressed over its own type parameters, flattened through nested wrappers.
+Each concrete call site (<code class="language-plaintext highlighter-rouge">Make&lt;int&gt;()</code>) substitutes its type arguments into the definitions, so only
+the combinations actually used are generated. Wrappers cannot use type parameters of a containing
+type (<code class="language-plaintext highlighter-rouge">ST017</code>), be virtual/abstract/interface members (<code class="language-plaintext highlighter-rouge">ST018</code>), recurse with different type
+arguments or chain more than <code class="language-plaintext highlighter-rouge">StuntClosure.MaxDepth</code> (8) wrappers (<code class="language-plaintext highlighter-rouge">ST019</code>). Local functions are
+supported; their symbols are normalized to the closure’s own semantic model, since local function
+symbols bound by different models are not equal.</p>
+
+<p>Cross-assembly: each stunt definition records the assembly that calls the leaf <code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;</code> at run time
+(the internal <code class="language-plaintext highlighter-rouge">Stunt</code> content class passes <code class="language-plaintext highlighter-rouge">typeof(Stunt).Assembly</code>). Libraries emit a public
+<code class="language-plaintext highlighter-rouge">Stunts.Generated.StuntDefinitions</code> class whose <code class="language-plaintext highlighter-rouge">[StuntDefinition(docId, assembly)]</code> methods carry the
+stunt definitions of externally visible wrappers as parameter types (trivial forwarding definitions are omitted).
+Consumers read them from metadata, generate the closed stunts, and register them under the leaf
+assembly’s name.</p>
+
+<p>Combinations no call site reveals (e.g. a runtime <code class="language-plaintext highlighter-rouge">Type</code>) are registered explicitly with
+<code class="language-plaintext highlighter-rouge">[assembly: Stunt&lt;T, T1..T8&gt;]</code> (<code class="language-plaintext highlighter-rouge">StuntAttribute&lt;...&gt;</code> in <code class="language-plaintext highlighter-rouge">Stunts.dll</code>). The generator’s
+registration attribute is configurable alongside the generator attribute
+(<code class="language-plaintext highlighter-rouge">StuntGenerator.WithRegistrationAttribute</code>).</p>
+
+<p><code class="language-plaintext highlighter-rouge">StuntGeneratorTests.CreatesConstructedGenericStuntsFromGenericMethod</code> and
+<code class="language-plaintext highlighter-rouge">ClosesGenericWrappersFromReferencedAssemblies</code> cover single and cross-assembly closure;
+<code class="language-plaintext highlighter-rouge">CodeAnalysis/ST016_UnannotatedGenericWrapper.cs</code> covers ST016-ST019 and the code fix;
+<code class="language-plaintext highlighter-rouge">Scenarios/GenericWrappers.cs</code> covers nested and repeated arguments, constructors, builders,
+delegates, default interface members, records, constraints, arrays, chains, local functions,
+and assembly registrations through the real generator.</p>
+
+<h2 id="stuntbuilder"><code class="language-plaintext highlighter-rouge">StuntBuilder</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">StuntBuilder</code> (also in <code class="language-plaintext highlighter-rouge">Stunt.cs</code>/<code class="language-plaintext highlighter-rouge">Stunt.vb</code>) implements <code class="language-plaintext highlighter-rouge">IStunt</code>, so the <code class="language-plaintext highlighter-rouge">AddBehavior</code>/
+<code class="language-plaintext highlighter-rouge">InsertBehavior</code> extension methods configure the list of behaviors <em>being built</em>, returning the
+builder itself for chaining. Its <code class="language-plaintext highlighter-rouge">Build&lt;T&gt;</code> overloads mirror <code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;</code> one to one (including
+the delegate one and the <code class="language-plaintext highlighter-rouge">T1</code>..<code class="language-plaintext highlighter-rouge">T8</code> extra interfaces), but wrap the stunt creation in
+<code class="language-plaintext highlighter-rouge">BehaviorPipelineFactory.UseAmbient</code> with a factory that seeds every new pipeline from the
+builder’s behaviors.</p>
+
+<p>That’s the key difference with <code class="language-plaintext highlighter-rouge">Stunt.Of</code>/<code class="language-plaintext highlighter-rouge">Stunt.For</code>: the behaviors are already in the pipeline
+when the stunt constructor runs, so they can intercept virtual members invoked from base class
+constructors (<code class="language-plaintext highlighter-rouge">ClassProxyTests.VirtualCallDuringConstructionUsesThePipelineFactory</code> shows the
+raw ambient-factory version of the same thing).</p>
+
+<p><code class="language-plaintext highlighter-rouge">BehaviorPipeline</code>’s <code class="language-plaintext highlighter-rouge">IEnumerable&lt;IStuntBehavior&gt;</code> constructor copies the list, so each built
+stunt gets a snapshot of the behaviors at build time, while sharing the behavior <em>instances</em>
+(a single <code class="language-plaintext highlighter-rouge">RecordingBehavior</code> records all stunts from the builder).</p>
+
+<p>The scenario at <code class="language-plaintext highlighter-rouge">src/Stunts.UnitTests/Scenarios/StuntBuilder.cs</code> covers all of the above through
+the real source generator (it uses the namespace <code class="language-plaintext highlighter-rouge">Stunts.Scenarios.Builders</code> because a
+<code class="language-plaintext highlighter-rouge">StuntBuilder</code> namespace segment would shadow the type).</p>
+
+<h2 id="data-annotations">Data annotations</h2>
+
+<p><code class="language-plaintext highlighter-rouge">DataAnnotationsBehavior</code> (<code class="language-plaintext highlighter-rouge">src/Stunts.Extensions</code>) rejects a call when a built-in
+<code class="language-plaintext highlighter-rouge">System.ComponentModel.DataAnnotations</code> validation attribute fails. The checks, the registry,
+and the source generator come from <code class="language-plaintext highlighter-rouge">NativeValidation</code>. Property
+attributes run on the setter. Method and constructor attributes run on the annotated parameters.
+Getters are not checked. The first failure is a <code class="language-plaintext highlighter-rouge">ValidationException</code>, and the rest of the
+pipeline does not run.</p>
+
+<p><code class="language-plaintext highlighter-rouge">StuntGeneratorAttribute</code> derives from <code class="language-plaintext highlighter-rouge">ValidationAttribute</code>, so the generator treats a generic
+<code class="language-plaintext highlighter-rouge">[StuntGenerator]</code> method as a validated factory and registers the closed types that call names.
+A factory that is not a stunt generator uses
+<code class="language-plaintext highlighter-rouge">Devlooped.DataAnnotations.ValidatedAttribute</code>. <code class="language-plaintext highlighter-rouge">[assembly: Validate&lt;T&gt;]</code> registers a closed
+type no factory call names. <code class="language-plaintext highlighter-rouge">Stunts.Extensions.targets</code> adds <code class="language-plaintext highlighter-rouge">$(NativeValidatorAnalyzer)</code> for consumers,
+because the annotated types live in the consuming compilation.</p>
+
+<p><code class="language-plaintext highlighter-rouge">CompareAttribute</code> reads the other property from the instance, which re-enters the pipeline.
+<code class="language-plaintext highlighter-rouge">Scenarios/DataAnnotationsBehavior.cs</code> covers the behavior through the package generator.</p>
+
+<h2 id="test-usage-pattern">Test usage pattern</h2>
+
+<p>Tests create the reference, configure behaviors on it, and assign the stunt to an explicitly
+typed local so the invoked type is obvious. Behaviors added before <code class="language-plaintext highlighter-rouge">ToObject()</code> are in place
+during construction; behaviors added after still modify the live pipeline:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">stunt</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;();</span>
+<span class="n">ICalculator</span> <span class="n">calculator</span> <span class="p">=</span> <span class="n">stunt</span><span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="n">stunt</span><span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DefaultValueBehavior</span><span class="p">());</span>
+
+<span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">calculator</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>Note that calling members on the reference itself would target <code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code> (for
+<code class="language-plaintext highlighter-rouge">ToString</code>, <code class="language-plaintext highlighter-rouge">GetHashCode</code> and <code class="language-plaintext highlighter-rouge">Equals</code>), not the stunt.</p>
+
+<h2 id="building-locally">Building locally</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">Stunts</code> and <code class="language-plaintext highlighter-rouge">Stunts.CodeAnalysis</code> assemblies are consumed as analyzers by other projects
+in the solution, so a full <code class="language-plaintext highlighter-rouge">dotnet build</code> may fail with file locks (<code class="language-plaintext highlighter-rouge">CS2012</code>) when an IDE has
+the solution open. Close the IDE, and if needed build projects one at a time with
+<code class="language-plaintext highlighter-rouge">/p:UseSharedCompilation=false</code>. Tests run with <code class="language-plaintext highlighter-rouge">dnx --yes retest</code>.</p>
+
+<h2 id="generator-execution">Generator execution</h2>
+
+<h3 id="native-aot">Native AOT</h3>
+
+<p>Instantiation never goes through reflection: the generator emits a
+<code class="language-plaintext highlighter-rouge">[ModuleInitializer]</code> <code class="language-plaintext highlighter-rouge">Stunts.Generated.StuntRegistrations.Initialize()</code> that calls
+<code class="language-plaintext highlighter-rouge">CompiledStuntFactory.Register(requester, typeof(TStunt), types, new StuntConstructor(parameterTypes, args =&gt; new TStunt(...)))</code>
+for every generated stunt (requires C# 9, <code class="language-plaintext highlighter-rouge">ST020</code>; a <code class="language-plaintext highlighter-rouge">ModuleInitializerAttribute</code> polyfill is
+emitted when missing). Delegate stunts register <code class="language-plaintext highlighter-rouge">new TDelegate(new TStunt(...).Invoke)</code>. A params
+array constructor also registers the form without the array, unless another constructor has that
+signature. Inaccessible nested stunts get <code class="language-plaintext highlighter-rouge">__RegisterStunt{n}</code> forwarders injected into their
+containers; they cannot be nested in generic types (<code class="language-plaintext highlighter-rouge">ST021</code>). <code class="language-plaintext highlighter-rouge">Register</code>’s <code class="language-plaintext highlighter-rouge">stuntType</code> preserves all
+members, which roots invocation metadata for trimming.</p>
+
+<p><code class="language-plaintext highlighter-rouge">CompiledStuntFactory</code> keeps an order-insensitive base+interfaces registry per requesting
+assembly (and by assembly name for cross-assembly registrations). On a miss it runs the
+requester’s module constructor once and retries, then throws <code class="language-plaintext highlighter-rouge">NotSupportedException</code> with the
+exact <code class="language-plaintext highlighter-rouge">[assembly: Stunt&lt;...&gt;]</code> line to add (formatted by <code class="language-plaintext highlighter-rouge">CSharpTypeName</code>). No matching or
+multiple matching constructors throw <code class="language-plaintext highlighter-rouge">MissingMethodException</code>/<code class="language-plaintext highlighter-rouge">AmbiguousMatchException</code>.
+<code class="language-plaintext highlighter-rouge">IStuntFactory.CreateStunt</code> intentionally stays <code class="language-plaintext highlighter-rouge">Type</code>-based: downstream libraries (e.g.
+Moq-like recursive mocks) create stunts from runtime <code class="language-plaintext highlighter-rouge">Type</code>s.</p>
+
+<p><code class="language-plaintext highlighter-rouge">CSharpAot</code> runs after pipeline rewriting. It roots closed invocation metadata, annotates the
+exact <code class="language-plaintext highlighter-rouge">GetCurrentMethod</code> callers, and emits typed default factories in a static constructor.
+Factory selection must preserve user registrations, deregistration, and virtual provider
+fallbacks. Static constructors do not count as available instance constructors during generation.</p>
+
+<p><code class="language-plaintext highlighter-rouge">PublishAot</code>, <code class="language-plaintext highlighter-rouge">IsAotCompatible</code>, and <code class="language-plaintext highlighter-rouge">EnableAotAnalyzer</code> are compiler-visible properties.
+<code class="language-plaintext highlighter-rouge">ST014</code> (from <code class="language-plaintext highlighter-rouge">Stunts.targets</code>) warns when those are set without compile-time stunts; <code class="language-plaintext highlighter-rouge">ST015</code>
+warns about generic intercepted methods and queryable defaults. Ref-struct holders are emitted only
+when the target runtime supports by-ref-like generics; Native AOT coverage includes .NET 8 and .NET 10.
+Keep the netstandard2.0 runtime for analyzer hosts and legacy consumers, and ship the net8.0
+runtime for Native AOT consumers.</p>
+
+<p>Visual Basic only supports run-time stunts: <code class="language-plaintext highlighter-rouge">Stunts.targets</code> forces <code class="language-plaintext highlighter-rouge">EnableCompileTimeStunts</code>
+to false for VB and warns (<code class="language-plaintext highlighter-rouge">ST011</code>) unless Stunts.DynamicProxy is installed. <code class="language-plaintext highlighter-rouge">GenericWrapperAnalyzer</code>
+is C#-only and is skipped when <code class="language-plaintext highlighter-rouge">EnableCompileTimeStunts</code> is explicitly false.</p>
+
+<p><code class="language-plaintext highlighter-rouge">src/Acceptance/CompiledAot</code> is published and executed as a native binary in CI, for <code class="language-plaintext highlighter-rouge">net8.0</code>
+and <code class="language-plaintext highlighter-rouge">net10.0</code>. It references the packed <code class="language-plaintext highlighter-rouge">Stunts</code> package, same as the other projects in
+<code class="language-plaintext highlighter-rouge">Acceptance.slnx</code>, and covers generic wrappers, assembly registrations and the unregistered-stunt
+message. It stays out of the package-building solution. On Windows, initialize the Visual C++
+environment (with <code class="language-plaintext highlighter-rouge">vswhere.exe</code> on <code class="language-plaintext highlighter-rouge">PATH</code>) before publishing.</p>
+
+<p><code class="language-plaintext highlighter-rouge">DependencyResolver</code> accepts simple-name assembly probes (their <code class="language-plaintext highlighter-rouge">Version</code> is null),
+and keeps registered paths in an immutable snapshot for concurrent compiler runs.
+Assembly-load errors propagate to Roslyn instead of invoking <code class="language-plaintext highlighter-rouge">Debug.Fail</code>, which
+can terminate the compiler process during diagnostic-resource probing.</p>
+
+<p>Generator caches belong to a single execution: reuse semantic models per syntax
+tree and inspect each factory’s original definition once. Event rewriting binds
+only declarations containing events. Interface scaffolding considers methods,
+properties, and events, not nested type declarations.</p>
+
+<p>Deduplicate stunts and default-interface helpers by namespace-qualified names.
+Roslyn compares source hint names case-insensitively; qualify them and disambiguate
+case-only collisions without changing generated type names. Sealed targets report
+<code class="language-plaintext highlighter-rouge">ST003</code> while other candidates continue generating.</p>
+
+<h3 id="signature-compatibility">Signature compatibility</h3>
+
+<p><code class="language-plaintext highlighter-rouge">MemberScaffold</code> preserves optional defaults, escaped identifiers, indexer metadata names,
+and inherited override constraints. External <code class="language-plaintext highlighter-rouge">protected internal</code> overrides become
+<code class="language-plaintext highlighter-rouge">protected</code>; constructor signatures exposing protected nested types remain protected.
+Attribute replication must not introduce inaccessible type references or invalid constants.</p>
+
+<p>Generated pipeline access is qualified with <code class="language-plaintext highlighter-rouge">this</code>, and generated locals/lambda parameters
+avoid names from the intercepted signature. Signatures longer than the <code class="language-plaintext highlighter-rouge">MethodInvocation.Create</code>
+overload limit use an <code class="language-plaintext highlighter-rouge">ArgumentCollection</code> instead. Ref-struct and pointer accessors use the same
+holder path as methods. Ref-struct holders are invalidated in <code class="language-plaintext highlighter-rouge">finally</code>, including constructor
+interception; constructor output arguments already initialized by the base call must be preserved.
+Mixed holder and ordinary <code class="language-plaintext highlighter-rouge">ref</code>/<code class="language-plaintext highlighter-rouge">out</code> signatures copy pipeline outputs back to the caller.</p>
+
+<p><code class="language-plaintext highlighter-rouge">InterfaceImplementation</code> is shared by the analyzer and generator. <code class="language-plaintext highlighter-rouge">ST012</code> rejects abstract
+interface members inaccessible to the consuming assembly, including internal setters:
+omitting the setter produces <code class="language-plaintext highlighter-rouge">CS0535</code>, while explicitly implementing it produces <code class="language-plaintext highlighter-rouge">CS0122</code>.
+Same-assembly and friend-assembly implementations remain supported, as do classes with an
+existing concrete implementation. <code class="language-plaintext highlighter-rouge">ST012_InaccessibleInterfaceMember</code> tests the actual C#
+compiler restriction using separate metadata assemblies.</p>
+
+<p><code class="language-plaintext highlighter-rouge">RuntimeSignature</code> similarly reports <code class="language-plaintext highlighter-rouge">ST013</code> for interceptable signatures using
+<code class="language-plaintext highlighter-rouge">TypedReference</code>, <code class="language-plaintext highlighter-rouge">ArgIterator</code>, or <code class="language-plaintext highlighter-rouge">RuntimeArgumentHandle</code>, which cannot be represented by
+the pipeline’s boxed arguments or generic holders. Invalid candidates do not prevent unrelated
+valid stunts from being generated.</p>
+
+<h2 id="comparison-package-acceptance-coverage">Comparison package acceptance coverage</h2>
+
+<p><code class="language-plaintext highlighter-rouge">src/Acceptance/GenerateReferenceStunts.cs</code> is a .NET file-based app containing the stable
+package snapshot used by the <code class="language-plaintext highlighter-rouge">Static</code> acceptance project (prerelease references and the cloned
+<code class="language-plaintext highlighter-rouge">efcore</code> and <code class="language-plaintext highlighter-rouge">iotedge</code> repositories are intentionally excluded). Run
+<code class="language-plaintext highlighter-rouge">dotnet run --file GenerateReferenceStunts.cs</code> from <code class="language-plaintext highlighter-rouge">src/Acceptance</code> to regenerate
+<code class="language-plaintext highlighter-rouge">src/Acceptance/Static/Stunts.cs</code>. The generator always resolves that output relative to its own
+source file. The file app disables <code class="language-plaintext highlighter-rouge">DeterministicSourcePaths</code> so CI path mapping does not
+rewrite its <code class="language-plaintext highlighter-rouge">CallerFilePath</code> to <code class="language-plaintext highlighter-rouge">/_</code>; other projects retain deterministic source paths.
+It loads the runtime assemblies from the comparison packages plus
+<code class="language-plaintext highlighter-rouge">Microsoft.AspNetCore.App</code>, and writes a <code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;()</code> call for every public interface and
+non-sealed class that is compiler-visible and proxyable, is not marked as a preview feature,
+and has no public preview members. Inaccessible abstract members, unavailable constructors,
+static-abstract interfaces, special CLR signatures, and obsolete-as-error APIs are excluded.
+Open generic types are emitted inside helper methods with their generic constraints preserved.</p>
+
+<p>The script preserves its compilation context and reads public metadata names from compile
+assets, filtering runtime-only types absent from reference assemblies. Match full metadata
+names, not assembly names: runtime core types and their reference definitions live in different
+assemblies. If changing file-based app properties leaves stale dependency metadata, rebuild
+the script explicitly before running it.</p>
+
+<p>Reflection type names preserve every declaring-type separator independently of generic arity.
+Distribute the requested type’s concrete generic arguments across its declaring-type chain;
+<code class="language-plaintext highlighter-rouge">DeclaringType</code> itself reopens constructed generics. Map free parameters by identity and
+preserve array ranks in C# order, including inside generic arguments and constraints.
+<code class="language-plaintext highlighter-rouge">AcceptanceTypeNameTests</code> compiles the script’s actual formatting helpers without executing
+its package-loading entry point.</p>
+
+<p>Keep the script directives and <code class="language-plaintext highlighter-rouge">src/Acceptance/Static/Stunts.props</code> synchronized when the
+comparison projects change. The props file gives the acceptance compilations matching metadata
+references; comparison-only references expose compile, runtime, and native assets, but not
+build targets or analyzers. Runtime dependencies are required because xUnit reflects over the
+generated types during discovery. A zero-test run is not successful acceptance validation:
+verify that tests are actually discovered and executed.</p>
+
+<p>Build and package the root solution before running <code class="language-plaintext highlighter-rouge">src/Acceptance/Acceptance.slnx</code>.
+<code class="language-plaintext highlighter-rouge">src/Acceptance/nuget.config</code> maps <code class="language-plaintext highlighter-rouge">Stunts*</code> and <code class="language-plaintext highlighter-rouge">ManualStunts</code> to that <code class="language-plaintext highlighter-rouge">bin</code> feed so package
+source mapping still restores the local packages.
+The root solution lists <code class="language-plaintext highlighter-rouge">Static.csproj</code> as a solution item rather than a project:
+acceptance consumes the produced packages, whose NuGet cache entries are cleared by
+the package build, so including it in that build creates a bootstrap/cache-order cycle.</p>
+
+<h2 id="agent-skills">Agent skills</h2>
+
+<h3 id="issue-tracker">Issue tracker</h3>
+
+<p>Issues and specs live as GitHub issues in devlooped/stunts. See <code class="language-plaintext highlighter-rouge">docs/agents/issue-tracker.md</code>.</p>
+
+<h3 id="triage-labels">Triage labels</h3>
+
+<p>Five canonical roles, each label string equal to its name: <code class="language-plaintext highlighter-rouge">needs-triage</code>, <code class="language-plaintext highlighter-rouge">needs-info</code>, <code class="language-plaintext highlighter-rouge">ready-for-agent</code>, <code class="language-plaintext highlighter-rouge">ready-for-human</code>, <code class="language-plaintext highlighter-rouge">wontfix</code>. See <code class="language-plaintext highlighter-rouge">docs/agents/triage-labels.md</code>.</p>
+
+<h3 id="domain-docs">Domain docs</h3>
+
+<p>Single-context: one <code class="language-plaintext highlighter-rouge">GLOSSARY.md</code> and <code class="language-plaintext highlighter-rouge">docs/adr/</code> at the repo root. See <code class="language-plaintext highlighter-rouge">docs/agents/domain.md</code>.</p>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">stunts maintained by <a href="https://github.com/devlooped">devlooped</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

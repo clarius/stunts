@@ -1,0 +1,9 @@
+@media (min-width:1400px) {
+    .container {
+        width: 1300px;
+    }
+}
+
+.table {
+    width: auto
+}

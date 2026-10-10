@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/stunts/assets/css/style.css?v=06335a3bf1af0d0a91d8bbe601a51dca0248c03c">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>stunts | A modern compile-time generated interception/proxy library</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="stunts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:site_name" content="stunts" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="stunts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"A modern compile-time generated interception/proxy library","headline":"stunts","name":"stunts","url":"/stunts/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/stunts/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          
+            <a id="forkme_banner" href="https://github.com/devlooped/stunts">View on GitHub</a>
+          
+
+          <h1 id="project_title">stunts</h1>
+          <h2 id="project_tagline">A modern compile-time generated interception/proxy library</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p align="center">
+  <img src="https://github.com/devlooped/stunts/raw/main/docs/images/hero.jpg" alt="Stunts" width="256" />
+</p>
+
+<h1 id="stunts" align="center">Stunts</h1>
+
+<p align="center">
+  <a href="https://www.nuget.org/packages/Stunts"><img src="https://img.shields.io/nuget/vpre/Stunts.svg?color=royalblue" alt="Version" /></a>
+  <a href="https://www.nuget.org/packages/Stunts"><img src="https://img.shields.io/nuget/dt/Stunts?color=darkmagenta" alt="Downloads" /></a>
+  <a href="osmfeula.txt"><img src="https://img.shields.io/badge/EULA-OSMF-blue?labelColor=black&amp;color=C9FF30" alt="EULA" /></a>
+  <a href="license.txt"><img src="https://img.shields.io/github/license/devlooped/oss.svg?color=blue" alt="OSS" /></a>
+  <a href="https://discord.gg/zETqV7HQ3Q"><img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" /></a>
+</p>
+
+<!-- include https://github.com/devlooped/.github/raw/main/osmf.md -->
+<h2 id="open-source-maintenance-fee">Open Source Maintenance Fee</h2>
+
+<p>To ensure the long-term sustainability of this project, users of this package who generate 
+revenue must pay an <a href="https://opensourcemaintenancefee.org">Open Source Maintenance Fee</a>. 
+While the source code is freely available under the terms of the <a href="/stunts/license.txt">License</a>, 
+this package and other aspects of the project require <a href="/stunts/osmfeula.txt">adherence to the Maintenance Fee</a>.</p>
+
+<p>To pay the Maintenance Fee, <a href="https://github.com/sponsors/devlooped">become a Sponsor</a> at the proper 
+OSMF tier. A single fee covers all of <a href="https://www.nuget.org/profiles/Devlooped">Devlooped packages</a>.</p>
+
+<!-- https://github.com/devlooped/.github/raw/main/osmf.md -->
+<hr />
+<!-- #content -->
+<p>A modern interception library that runs everywhere, even where run-time code generation (Reflection.Emit) is forbidden or limitted (i.e. physical iOS devices and game consoles), through compile-time code generation.</p>
+
+<blockquote>
+  <p>The <strong>Stunts</strong> name was inspired by the <a href="http://xunitpatterns.com/Test%20Double.html">Test Double</a> naming in the mock objects literature, which in turn comes from the <a href="https://en.wikipedia.org/wiki/Stunt_double">Stunt Double</a> concept from film making. This project allows your objects to pull arbitrary <em>stunts</em> based on your instructions/choreography 😉.</p>
+</blockquote>
+
+<p>Stunts essentially implements the <a href="https://en.wikipedia.org/wiki/Proxy_pattern">proxy pattern</a> and adds the capability of configuring those proxies via code using what we call a <em>behavior pipeline</em>.</p>
+
+<blockquote>
+  <p>NOTE: Stunts provides a fairly low-level API with just the essential building blocks on top of which higher-level APIs can be built, such as the upcoming Moq vNext API.</p>
+</blockquote>
+
+<h2 id="usage">Usage</h2>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">stunt</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;();</span>
+<span class="n">ICalculator</span> <span class="n">calc</span> <span class="p">=</span> <span class="n">stunt</span><span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="n">stunt</span><span class="p">.</span><span class="nf">AddBehavior</span><span class="p">((</span><span class="n">invocation</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">...);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;</code> returns the stunt directly, and <code class="language-plaintext highlighter-rouge">Stunt.Get(stunt)</code> gets a <code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code> for an existing one, so behaviors can be added after the fact:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ICalculator</span> <span class="n">calc</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">Of</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;();</span>
+
+<span class="n">Stunt</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="n">calc</span><span class="p">).</span><span class="nf">AddBehavior</span><span class="p">((</span><span class="n">invocation</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">...);</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>NOTE: <code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code> converts implicitly to <code class="language-plaintext highlighter-rouge">T</code> for classes and delegates. C# does not allow user-defined conversions to interfaces, so <code class="language-plaintext highlighter-rouge">ToObject()</code> is always available.</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">AddBehavior</code>/<code class="language-plaintext highlighter-rouge">InsertBehavior</code> are extension methods on <code class="language-plaintext highlighter-rouge">IStunt</code> (which <code class="language-plaintext highlighter-rouge">StuntReference&lt;T&gt;</code> implements) and allow granular control of the stunt’s behavior pipeline, which is basically a <a href="https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">chain of responsibility</a> that invokes all configured behaviors that apply to the current invocation. Individual behaviors can determine whether to short-circuit the call or call the next behavior in the chain.</p>
+
+<p>Behaviors can also dynamically determine whether they apply to a given invocation by providing the optional <code class="language-plaintext highlighter-rouge">appliesTo</code> argument. In addition to the delegate-based overloads (called <em>anonymous behaviors</em>), you can also create behaviors by implementing the <code class="language-plaintext highlighter-rouge">IStuntBehavior</code> interface:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">interface</span> <span class="nc">IStuntBehavior</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="nf">AppliesTo</span><span class="p">(</span><span class="n">IMethodInvocation</span> <span class="n">invocation</span><span class="p">);</span>
+    <span class="n">IMethodReturn</span> <span class="nf">Execute</span><span class="p">(</span><span class="n">IMethodInvocation</span> <span class="n">invocation</span><span class="p">,</span> <span class="n">ExecuteHandler</span> <span class="n">next</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="common-behaviors">Common Behaviors</h2>
+
+<p>Some commonly used behaviors that are generally useful are provided in the library and can be added to stunts as needed:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">DefaultValueBehavior</code>: sets default values for method return and <em>out</em> arguments. In addition to the built-in supported default values, additional default value factories can be registered for any type.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">DefaultEqualityBehavior</code>: implements the <em>Object.Equals</em> and <em>Object.GetHashCode</em> members just like <em>System.Object</em> implements them.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">RecordingBehavior</code>: simple behavior that keeps track of all invocations, for troubleshooting or reporting.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ExceptionMappingBehavior</code>: translates an exception from the target. Return null from the map to leave the exception unchanged, or another instance to replace it. Pass <code class="language-plaintext highlighter-rouge">swallow: true</code> to turn a null result into the <code class="language-plaintext highlighter-rouge">DefaultValueProvider</code> value, and pass an existing provider to reuse custom defaults.</p>
+  </li>
+</ul>
+
+<!-- #annotations -->
+<h2 id="data-annotations">Data annotations</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">Stunts.Extensions</code> package adds <code class="language-plaintext highlighter-rouge">DataAnnotationsBehavior</code>. It rejects a call when a built-in
+<code class="language-plaintext highlighter-rouge">System.ComponentModel.DataAnnotations</code> attribute fails. The checks come from
+<a href="https://www.nuget.org/packages/NativeValidation">NativeValidation</a>:
+a source generator turns each attribute into a direct call, so the behavior does not reflect and
+stays valid for Native AOT.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">stunt</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">IAccount</span><span class="p">&gt;();</span>
+<span class="n">stunt</span><span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DataAnnotationsBehavior</span><span class="p">());</span>
+<span class="n">IAccount</span> <span class="n">account</span> <span class="p">=</span> <span class="n">stunt</span><span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="n">account</span><span class="p">.</span><span class="n">Email</span> <span class="p">=</span> <span class="s">"ada@example.com"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">interface</span> <span class="nc">IAccount</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">EmailAddress</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">Display</span><span class="p">(</span><span class="n">Name</span> <span class="p">=</span> <span class="s">"Email address"</span><span class="p">)]</span>
+    <span class="kt">string</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">Rename</span><span class="p">([</span><span class="n">Required</span><span class="p">,</span> <span class="nf">StringLength</span><span class="p">(</span><span class="m">8</span><span class="p">,</span> <span class="n">MinimumLength</span> <span class="p">=</span> <span class="m">2</span><span class="p">)]</span> <span class="kt">string</span> <span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="nf">Range</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">)]</span> <span class="kt">int</span> <span class="n">attempt</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Property attributes run on the setter. Method and constructor attributes run on the annotated
+parameters. Getters are not checked. The first failure is a <code class="language-plaintext highlighter-rouge">ValidationException</code>, and the rest
+of the pipeline does not run. Add this behavior last to place the check immediately before the
+target. Behaviors added before it still see the rejection.</p>
+
+<p><code class="language-plaintext highlighter-rouge">StuntGeneratorAttribute</code> derives from <code class="language-plaintext highlighter-rouge">ValidationAttribute</code>, so a generic <code class="language-plaintext highlighter-rouge">[StuntGenerator]</code> method
+registers the closed types named at its call sites. A factory that is not a stunt generator uses
+<code class="language-plaintext highlighter-rouge">[Validated]</code> from <code class="language-plaintext highlighter-rouge">Devlooped.DataAnnotations</code>. A closed type with no factory call uses
+<code class="language-plaintext highlighter-rouge">[assembly: Validate&lt;T&gt;]</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">CompareAttribute</code> reads the other property from the instance. On a stunt that call re-enters
+the pipeline, so a <code class="language-plaintext highlighter-rouge">SynchronizedBehavior</code> wrapped outside this one throws on the re-entry.
+<code class="language-plaintext highlighter-rouge">CustomValidationAttribute</code> is a direct call to the named static method. Any other
+<code class="language-plaintext highlighter-rouge">ValidationAttribute</code> subclass warns as <code class="language-plaintext highlighter-rouge">NVA001</code> and is not enforced.
+<!-- #annotations --></p>
+
+<h2 id="building-stunts">Building Stunts</h2>
+
+<p>When you need the same behaviors on multiple stunts, <code class="language-plaintext highlighter-rouge">Stunt.Builder()</code> returns a <code class="language-plaintext highlighter-rouge">StuntBuilder</code> 
+that collects behaviors (with the very same <code class="language-plaintext highlighter-rouge">AddBehavior</code>/<code class="language-plaintext highlighter-rouge">InsertBehavior</code> extension methods) and 
+applies them to every stunt it builds, with the same <code class="language-plaintext highlighter-rouge">Build&lt;T&gt;</code> overloads as <code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;</code>:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="nf">Builder</span><span class="p">()</span>
+    <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">RecordingBehavior</span><span class="p">())</span>
+    <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DefaultValueBehavior</span><span class="p">());</span>
+
+<span class="n">ICalculator</span> <span class="n">calculator</span> <span class="p">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;();</span>
+<span class="n">IStore</span> <span class="n">store</span> <span class="p">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">&lt;</span><span class="n">IStore</span><span class="p">&gt;();</span>
+</code></pre></div></div>
+
+<p>Since the behaviors are in place <em>before</em> the stunt is instantiated (via an ambient 
+<code class="language-plaintext highlighter-rouge">BehaviorPipelineFactory</code>), they also intercept virtual members invoked from base class 
+constructors, which isn’t possible when behaviors are added to an already created stunt:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Greeter</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">Greeter</span><span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Seen</span> <span class="p">=</span> <span class="nf">Name</span><span class="p">();</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Seen</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="nf">Name</span><span class="p">()</span> <span class="p">=&gt;</span> <span class="s">"base"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Greeter</span> <span class="n">greeter</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="nf">Builder</span><span class="p">()</span>
+    <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">((</span><span class="n">invocation</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">invocation</span><span class="p">.</span><span class="n">MethodBase</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="k">nameof</span><span class="p">(</span><span class="n">Greeter</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+        <span class="p">?</span> <span class="n">invocation</span><span class="p">.</span><span class="nf">CreateValueReturn</span><span class="p">(</span><span class="s">"proxy"</span><span class="p">)</span>
+        <span class="p">:</span> <span class="nf">next</span><span class="p">(</span><span class="n">invocation</span><span class="p">,</span> <span class="n">next</span><span class="p">))</span>
+    <span class="p">.</span><span class="n">Build</span><span class="p">&lt;</span><span class="n">Greeter</span><span class="p">&gt;();</span>
+
+<span class="c1">// greeter.Seen == "proxy"</span>
+</code></pre></div></div>
+
+<p>Each <code class="language-plaintext highlighter-rouge">Build</code> call takes a snapshot of the behaviors configured at that point, so behaviors added 
+to the builder afterwards don’t affect the stunts already built. Behavior instances themselves are 
+shared, so a single <code class="language-plaintext highlighter-rouge">RecordingBehavior</code> records the invocations of all stunts from that builder.</p>
+
+<h2 id="customizing-stunt-creation">Customizing Stunt Creation</h2>
+
+<p>If you want to centrally configure all your stunts, the easiest way is to simply provide your own factory method (i.e. <code class="language-plaintext highlighter-rouge">Stub.Of&lt;T&gt;</code>), which in turn calls the <code class="language-plaintext highlighter-rouge">Stunt.Of&lt;T&gt;</code> provided. For example:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Stub</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">StuntGenerator</span><span class="p">]</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">T</span> <span class="n">Of</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;()</span> <span class="p">=&gt;</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;()</span>
+            <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">RecordingBehavior</span><span class="p">())</span>
+            <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DefaultEqualityBehavior</span><span class="p">())</span>
+            <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DefaultValueBehavior</span><span class="p">())</span>
+            <span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">[StuntGenerator]</code> attribute is required if you want to leverage the built-in compile-time code generation, since that signals to the source generator that calls to your API end up creating a stunt at run-time and therefore a generated type will be needed for it during compile-time. You can actually explore how this very same behavior is implemented in the built-in Stunts API, which is provided as content files (<code class="language-plaintext highlighter-rouge">Stunt.cs</code> and <code class="language-plaintext highlighter-rouge">Stunt.vb</code>):</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">StuntGenerator</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">static</span> <span class="n">T</span> <span class="n">Of</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">params</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">constructorArgs</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">Create</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">constructorArgs</span><span class="p">);</span>
+
+<span class="p">[</span><span class="n">StuntGenerator</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">static</span> <span class="n">T</span> <span class="n">Of</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T1</span><span class="p">&gt;(</span><span class="k">params</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">constructorArgs</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">Create</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">constructorArgs</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">T1</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>As you can see, the Stunts API itself uses the same extensibility mechanism that your own custom factory methods can use.</p>
+
+<p>The attribute normally treats the generic arguments at the call site as the stunt’s base type and
+additional interfaces. Generic factories that construct stunt types from their own type parameters
+must be annotated too:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">StuntGenerator</span><span class="p">]</span>
+<span class="k">static</span> <span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">T</span><span class="p">&gt;</span> <span class="n">Create</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;()</span> <span class="p">=&gt;</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">Of</span><span class="p">&lt;</span><span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">T</span><span class="p">&gt;&gt;();</span>
+
+<span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span> <span class="n">dictionary</span> <span class="p">=</span> <span class="n">Create</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
+</code></pre></div></div>
+
+<p>The generator follows such wrappers (up to 8 levels, including across referenced assemblies) and
+generates the closed stunts each call site needs, here <code class="language-plaintext highlighter-rouge">IDictionary&lt;string, int&gt;</code>. Unannotated
+wrappers are reported (<code class="language-plaintext highlighter-rouge">ST016</code>, with a code fix). Stunt types only known at run time can be
+registered explicitly anywhere in the project:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">assembly</span><span class="p">:</span> <span class="n">Stunt</span><span class="p">&lt;</span><span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">&gt;,</span> <span class="n">IDisposable</span><span class="p">&gt;]</span>
+</code></pre></div></div>
+
+<p>Requesting a stunt that was not generated throws a <code class="language-plaintext highlighter-rouge">NotSupportedException</code> containing the exact
+attribute to add.</p>
+
+<h3 id="native-aot">Native AOT</h3>
+
+<p>Compile-time stunts support Native AOT on .NET 8 and later. Generated registrations
+preserve constructors and invocation metadata, and generated typed factories
+provide <code class="language-plaintext highlighter-rouge">DefaultValueBehavior</code> defaults without runtime generic instantiation. Interfaces,
+classes, delegates, additional interfaces, constructor interception, default interface members,
+and closed generic targets are supported.
+Ref-struct holders additionally require .NET 9 or later for by-ref-like generics.
+Ref-struct and pointer signatures require unsafe blocks.</p>
+
+<p>Set <code class="language-plaintext highlighter-rouge">&lt;PublishAot&gt;true&lt;/PublishAot&gt;</code> to publish a native executable. <code class="language-plaintext highlighter-rouge">IsAotCompatible</code> or
+<code class="language-plaintext highlighter-rouge">EnableAotAnalyzer</code> also enables the Stunts compatibility warnings during ordinary builds:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Warning</th>
+      <th>Limitation</th>
+      <th>Alternative</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ST014</code></td>
+      <td>Runtime proxies require dynamic code</td>
+      <td>Enable compile-time stunts</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ST015</code></td>
+      <td>Generic intercepted methods use runtime <code class="language-plaintext highlighter-rouge">MakeGenericMethod</code></td>
+      <td>Use non-generic members with closed parameter and return types</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ST015</code></td>
+      <td>Ref-struct interception needs by-ref-like generics</td>
+      <td>Target .NET 9 or later</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ST015</code></td>
+      <td><code class="language-plaintext highlighter-rouge">IQueryable</code> defaults require dynamic code</td>
+      <td>Register an AOT-compatible typed <code class="language-plaintext highlighter-rouge">DefaultValueProvider</code> factory, or avoid <code class="language-plaintext highlighter-rouge">DefaultValueBehavior</code> for that member</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Generated stunts register typed constructors from a module initializer, so they are created
+without reflection. Use <code class="language-plaintext highlighter-rouge">Ref.Create&lt;T&gt;</code> instead of the reflection-based <code class="language-plaintext highlighter-rouge">Ref.Create(Type, object)</code>
+overload, which carries the standard .NET AOT and trimming warnings.</p>
+
+<p>Arrays, enumerable results, tasks, value tasks, tuples, and output defaults used by closed
+stunts have typed factories. Defaults for other runtime-only types require explicit
+<code class="language-plaintext highlighter-rouge">DefaultValueProvider.Register&lt;T&gt;</code> factories. Custom registrations, deregistration, and virtual
+fallback overrides remain available.</p>
+
+<h3 id="compiled-vs-dynamic-stunts">Compiled vs Dynamic Stunts</h3>
+
+<p>By default, Stunts generates proxies at compile-time (powered by Roslyn source generators). Whenever compile-time stunts are 
+not supported (or unwanted), install the <code class="language-plaintext highlighter-rouge">Stunts.DynamicProxy</code> package, which switches the project to run-time proxies based on Castle.Core:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ItemGroup&gt;</span>
+    <span class="nt">&lt;PackageReference</span> <span class="na">Include=</span><span class="s">"Stunts.DynamicProxy"</span> <span class="na">Version=</span><span class="s">"..."</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/ItemGroup&gt;</span>
+</code></pre></div></div>
+
+<p>The package sets <code class="language-plaintext highlighter-rouge">EnableCompileTimeStunts=false</code> for you. Projects that can’t use compile-time stunts and don’t reference <code class="language-plaintext highlighter-rouge">Stunts.DynamicProxy</code> get a build warning (<code class="language-plaintext highlighter-rouge">ST011</code>).
+Visual Basic projects only support run-time stunts, so they always need <code class="language-plaintext highlighter-rouge">Stunts.DynamicProxy</code>.</p>
+
+<p>Compile-time stunts support optional parameters, inherited generic constraints, long signatures,
+and <code class="language-plaintext highlighter-rouge">ref</code>/<code class="language-plaintext highlighter-rouge">out</code> arguments alongside spans and other ref structs. Ref-struct and pointer signatures
+require unsafe blocks to be enabled.</p>
+
+<p>Unsupported targets produce diagnostics at the factory call: <code class="language-plaintext highlighter-rouge">ST012</code> identifies inaccessible
+abstract interface members (such as an internal setter from another assembly, which C# cannot
+implement), while <code class="language-plaintext highlighter-rouge">ST013</code> identifies signatures using <code class="language-plaintext highlighter-rouge">TypedReference</code>, <code class="language-plaintext highlighter-rouge">ArgIterator</code>, or
+<code class="language-plaintext highlighter-rouge">RuntimeArgumentHandle</code>, which the behavior pipeline cannot represent. Internal interface
+members remain supported when accessible through the same assembly or <code class="language-plaintext highlighter-rouge">InternalsVisibleTo</code>.</p>
+
+<!-- #manual -->
+<blockquote>
+  <p>NOTE: even though generated proxies are the main usage for Stunts, the API was designed so that you can also consume the behavior pipeline easily from hand-coded proxies too.
+<!-- #manual --></p>
+</blockquote>
+
+<h2 id="features">Features</h2>
+
+<p>The examples below use <code class="language-plaintext highlighter-rouge">ICalculator</code> from <a href="/stunts/samples/Samples/Core/ICalculator.cs">the samples</a>, which declares <code class="language-plaintext highlighter-rouge">Add(int x, int y)</code>. Each snippet starts with a fresh stunt.</p>
+
+<h3 id="return-a-value-for-a-specific-call">Return a value for a specific call</h3>
+
+<p>An anonymous behavior can short-circuit a call. The <code class="language-plaintext highlighter-rouge">appliesTo</code> predicate limits it to the two-argument <code class="language-plaintext highlighter-rouge">Add</code> overload:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">calc</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;().</span><span class="nf">AddBehavior</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">call</span><span class="p">.</span><span class="nf">CreateValueReturn</span><span class="p">(</span><span class="m">42</span><span class="p">),</span>
+    <span class="n">call</span> <span class="p">=&gt;</span> <span class="n">call</span><span class="p">.</span><span class="n">MethodBase</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="k">nameof</span><span class="p">(</span><span class="n">ICalculator</span><span class="p">.</span><span class="n">Add</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">call</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="n">calc</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">);</span> <span class="c1">// 42</span>
+</code></pre></div></div>
+
+<h3 id="compute-a-result-from-the-arguments">Compute a result from the arguments</h3>
+
+<p>Arguments are available by name (or index), so a behavior can use the values passed by the caller:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">calc</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;().</span><span class="nf">AddBehavior</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">call</span><span class="p">.</span><span class="nf">CreateValueReturn</span><span class="p">(</span><span class="n">call</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="s">"x"</span><span class="p">)</span> <span class="p">+</span> <span class="n">call</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="s">"y"</span><span class="p">)),</span>
+    <span class="n">call</span> <span class="p">=&gt;</span> <span class="n">call</span><span class="p">.</span><span class="n">MethodBase</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="k">nameof</span><span class="p">(</span><span class="n">ICalculator</span><span class="p">.</span><span class="n">Add</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">call</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="n">calc</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">);</span> <span class="c1">// 5</span>
+</code></pre></div></div>
+
+<h3 id="compose-behaviors">Compose behaviors</h3>
+
+<p>Behaviors run in order. Put recording first to capture calls and results, and a default-value behavior last to handle calls not matched by the <code class="language-plaintext highlighter-rouge">Add</code> behavior:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">recorder</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">RecordingBehavior</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">calc</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">ICalculator</span><span class="p">&gt;()</span>
+    <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="n">recorder</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">((</span><span class="n">call</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">call</span><span class="p">.</span><span class="nf">CreateValueReturn</span><span class="p">(</span><span class="m">5</span><span class="p">),</span>
+        <span class="n">call</span> <span class="p">=&gt;</span> <span class="n">call</span><span class="p">.</span><span class="n">MethodBase</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="k">nameof</span><span class="p">(</span><span class="n">ICalculator</span><span class="p">.</span><span class="n">Add</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">call</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">2</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DefaultValueBehavior</span><span class="p">())</span>
+    <span class="p">.</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="n">calc</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">);</span> <span class="c1">// 5</span>
+<span class="kt">var</span> <span class="n">calls</span> <span class="p">=</span> <span class="n">recorder</span><span class="p">.</span><span class="n">Invocations</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="c1">// 1</span>
+</code></pre></div></div>
+
+<h3 id="customize-default-values">Customize default values</h3>
+
+<p>Register a factory when the built-in defaults are not suitable. Here, each call to a delegate stunt returns a greeting:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">defaults</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DefaultValueProvider</span><span class="p">();</span>
+<span class="n">defaults</span><span class="p">.</span><span class="nf">Register</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="s">"Hello!"</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">greet</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;&gt;().</span><span class="nf">AddBehavior</span><span class="p">(</span><span class="k">new</span> <span class="nf">DefaultValueBehavior</span><span class="p">(</span><span class="n">defaults</span><span class="p">)).</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="nf">greet</span><span class="p">();</span> <span class="c1">// "Hello!"</span>
+</code></pre></div></div>
+
+<h3 id="intercept-a-real-implementation">Intercept a real implementation</h3>
+
+<p>Pass a delegate implementation to <code class="language-plaintext highlighter-rouge">Stunt.For</code> and call <code class="language-plaintext highlighter-rouge">next</code> to forward to it. Behaviors can change arguments before forwarding:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="k">add</span> <span class="p">=</span> <span class="n">Stunt</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;&gt;((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">x</span> <span class="p">+</span> <span class="n">y</span><span class="p">).</span><span class="nf">AddBehavior</span><span class="p">((</span><span class="n">call</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">=&gt;</span>
+<span class="p">{</span>
+    <span class="n">call</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nf">next</span><span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">next</span><span class="p">);</span>
+<span class="p">}).</span><span class="nf">ToObject</span><span class="p">();</span>
+
+<span class="k">add</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">);</span> <span class="c1">// 12</span>
+</code></pre></div></div>
+
+<h3 id="debugging-optimizations">Debugging Optimizations</h3>
+
+<p>There is nothing more frustrating than a proxy/stunt you have carefully configured that doesn’t behave the way you expect it to. In order to make this a less frustrating experience, Stunts is carefully optimized for debugger display and inspection, so that it’s clear what behaviors are configured, and invocations and results are displayed clearly and concisely. Here’s the debugging display of the <code class="language-plaintext highlighter-rouge">RecordingBehavior</code> that just keeps track of invocations and their return values for example:</p>
+
+<p><img src="/stunts/docs/images/DebuggerDisplay.png" alt="debugging display" /></p>
+
+<p>And here’s the invocation debugger display from an anonymous behavior:</p>
+
+<p><img src="/stunts/docs/images/DebuggingBehavior.png" alt="behavior debugging" /></p>
+
+<!-- #samples -->
+<h2 id="samples">Samples</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">samples</code> folder in the repository contains a few interesting examples of how <em>Stunts</em> can be used to implement some fancy use cases. For example:</p>
+
+<ul>
+  <li>
+    <p>Forwarding calls to matching interface methods/properties (by signature) to a static class. The example uses this to wrap calls to <em>System.Console</em> via an <em>IConsole</em> interface.</p>
+  </li>
+  <li>
+    <p>Forwarding calls to a target object using the DLR (that backs the <em>dynamic</em> keyword in C#) API for high-performance late binding.</p>
+  </li>
+  <li>
+    <p>Custom <code class="language-plaintext highlighter-rouge">Stub.Of&lt;T&gt;</code> factory that creates stunts that have common behaviors configured automatically.</p>
+  </li>
+  <li>
+    <p>Custom stunt factory method that adds an int return value randomizer.</p>
+  </li>
+  <li>
+    <p>Configuring the built-in <em>DefaultValueBehavior</em> so that every time a string property is retrieved, it gets a random lorem ipsum value.</p>
+  </li>
+  <li>
+    <p>Logging all calls to a stunt to the Xunit output helper.
+<!-- #samples -->
+<!-- #content --></p>
+  </li>
+</ul>
+
+<!-- include https://github.com/devlooped/sponsors/raw/main/footer.md -->
+<h1 id="sponsors">Sponsors</h1>
+
+<!-- sponsors.md -->
+<p><a href="https://github.com/clarius"><img src="https://avatars.githubusercontent.com/u/71888636?v=4&amp;s=39" alt="Clarius Org" title="Clarius Org" /></a>
+<a href="https://github.com/MFB-Technologies-Inc"><img src="https://avatars.githubusercontent.com/u/87181630?v=4&amp;s=39" alt="MFB Technologies, Inc." title="MFB Technologies, Inc." /></a>
+<a href="https://github.com/sandrock"><img src="https://avatars.githubusercontent.com/u/321868?u=99e50a714276c43ae820632f1da88cb71632ec97&amp;v=4&amp;s=39" alt="SandRock" title="SandRock" /></a>
+<a href="https://github.com/drivenet"><img src="https://avatars.githubusercontent.com/u/15047123?v=4&amp;s=39" alt="DRIVE.NET, Inc." title="DRIVE.NET, Inc." /></a>
+<a href="https://github.com/Keflon"><img src="https://avatars.githubusercontent.com/u/16598898?u=64416b80caf7092a885f60bb31612270bffc9598&amp;v=4&amp;s=39" alt="Keith Pickford" title="Keith Pickford" /></a>
+<a href="https://github.com/tbolon"><img src="https://avatars.githubusercontent.com/u/127185?u=7f50babfc888675e37feb80851a4e9708f573386&amp;v=4&amp;s=39" alt="Thomas Bolon" title="Thomas Bolon" /></a>
+<a href="https://github.com/rbnswartz"><img src="https://avatars.githubusercontent.com/u/724704?u=2076fe336f9f6ad678009f1595cbea434b0c5a41&amp;v=4&amp;s=39" alt="Reuben Swartz" title="Reuben Swartz" /></a>
+<a href="https://github.com/jfoshee"><img src="https://avatars.githubusercontent.com/u/480334?v=4&amp;s=39" alt="Jacob Foshee" title="Jacob Foshee" /></a>
+<a href="https://github.com/eajhnsn1"><img src="https://avatars.githubusercontent.com/u/33566379?u=bf62e2b46435a267fa246a64537870fd2449410f&amp;v=4&amp;s=39" alt="" title="&quot;)](https://github.com/Mrxx99)
+[![Eric Johnson](https://avatars.githubusercontent.com/u/26369281?u=41b560c2bc493149b32d384b960e0948c78767ab&amp;v=4&amp;s=39 &quot;Eric Johnson" /></a>
+<a href="https://github.com/Jonathan-Hickey"><img src="https://avatars.githubusercontent.com/u/5510103?u=98dcfbef3f32de629d30f1f418a095bf09e14891&amp;v=4&amp;s=39" alt="Jonathan " title="Jonathan " /></a>
+<a href="https://github.com/KenBonny"><img src="https://avatars.githubusercontent.com/u/6417376?u=569af445b6f387917029ffb5129e9cf9f6f68421&amp;v=4&amp;s=39" alt="Ken Bonny" title="Ken Bonny" /></a>
+<a href="https://github.com/SimonCropp"><img src="https://avatars.githubusercontent.com/u/122666?v=4&amp;s=39" alt="Simon Cropp" title="Simon Cropp" /></a>
+<a href="https://github.com/agileworks-eu"><img src="https://avatars.githubusercontent.com/u/5989304?v=4&amp;s=39" alt="agileworks-eu" title="agileworks-eu" /></a>
+<a href="https://github.com/arsdragonfly"><img src="https://avatars.githubusercontent.com/u/4067473?v=4&amp;s=39" alt="Zheyu Shen" title="Zheyu Shen" /></a>
+<a href="https://github.com/vezel-dev"><img src="https://avatars.githubusercontent.com/u/87844133?v=4&amp;s=39" alt="Vezel" title="Vezel" /></a>
+<a href="https://github.com/ChilliCream"><img src="https://avatars.githubusercontent.com/u/16239022?v=4&amp;s=39" alt="ChilliCream" title="ChilliCream" /></a>
+<a href="https://github.com/4OTC"><img src="https://avatars.githubusercontent.com/u/68428092?v=4&amp;s=39" alt="4OTC" title="4OTC" /></a>
+<a href="https://github.com/DominicSchell"><img src="https://avatars.githubusercontent.com/u/66068846?u=0a5c5e2e7d90f15ea657bc660f175605935c5bea&amp;v=4&amp;s=39" alt="domischell" title="domischell" /></a>
+<a href="https://github.com/adalon"><img src="https://avatars.githubusercontent.com/u/2027083?u=129cf516d99f5cb2fd0f4a0787a069f3446b7522&amp;v=4&amp;s=39" alt="Adrian Alonso" title="Adrian Alonso" /></a>
+<a href="https://github.com/torutek"><img src="https://avatars.githubusercontent.com/u/33917059?v=4&amp;s=39" alt="torutek" title="torutek" /></a>
+<a href="https://github.com/mccaffers"><img src="https://avatars.githubusercontent.com/u/16667079?u=c0daa64bb5c1b572130e05ae2b6f609ecc912d4d&amp;v=4&amp;s=39" alt="Ryan McCaffery" title="Ryan McCaffery" /></a>
+<a href="https://github.com/SeikaLogiciel"><img src="https://avatars.githubusercontent.com/u/2564602?v=4&amp;s=39" alt="Seika Logiciel" title="Seika Logiciel" /></a>
+<a href="https://github.com/wizardness"><img src="https://avatars.githubusercontent.com/devlooped-user?s=39" alt="Andrew Grant" title="Andrew Grant" /></a>
+<a href="https://github.com/eska-gmbh"><img src="https://avatars.githubusercontent.com/devlooped-team?s=39" alt="eska-gmbh" title="eska-gmbh" /></a>
+<a href="https://github.com/geodata-no"><img src="https://avatars.githubusercontent.com/u/5946299?v=4&amp;s=39" alt="Geodata AS" title="Geodata AS" /></a></p>
+
+<!-- sponsors.md -->
+<p><a href="https://github.com/sponsors/devlooped"><img src="https://avatars.githubusercontent.com/devlooped-sponsor?s=118" alt="Sponsor this project" title="Sponsor this project" /></a></p>
+
+<p><a href="https://github.com/sponsors">Learn more about GitHub Sponsors</a></p>
+
+<!-- https://github.com/devlooped/sponsors/raw/main/footer.md -->
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">stunts maintained by <a href="https://github.com/devlooped">devlooped</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

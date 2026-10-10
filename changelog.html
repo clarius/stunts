@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/stunts/assets/css/style.css?v=06335a3bf1af0d0a91d8bbe601a51dca0248c03c">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Changelog | stunts</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Changelog" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:description" content="A modern compile-time generated interception/proxy library" />
+<meta property="og:site_name" content="stunts" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Changelog" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"A modern compile-time generated interception/proxy library","headline":"Changelog","url":"/stunts/changelog.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/stunts/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          
+            <a id="forkme_banner" href="https://github.com/devlooped/stunts">View on GitHub</a>
+          
+
+          <h1 id="project_title">stunts</h1>
+          <h2 id="project_tagline">A modern compile-time generated interception/proxy library</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1 id="changelog">Changelog</h1>
+
+<h2 id="v100-beta3-2026-09-29"><a href="https://github.com/devlooped/stunts/tree/v1.0.0-beta.3">v1.0.0-beta.3</a> (2026-09-29)</h2>
+
+<p><a href="https://github.com/devlooped/stunts/compare/v1.0.0-beta.2...v1.0.0-beta.3">Full Changelog</a></p>
+
+<p>:bug: Fixed bugs:</p>
+
+<ul>
+  <li>Fix AmbiguousMatchException for default ValueTask&lt;T&gt; of reference types <a href="https://github.com/devlooped/stunts/pull/231">#231</a> (@kzu)</li>
+</ul>
+
+<h2 id="v100-beta2-2026-09-28"><a href="https://github.com/devlooped/stunts/tree/v1.0.0-beta.2">v1.0.0-beta.2</a> (2026-09-28)</h2>
+
+<p><a href="https://github.com/devlooped/stunts/compare/v1.0.0-beta.1...v1.0.0-beta.2">Full Changelog</a></p>
+
+<p>:twisted_rightwards_arrows: Merged:</p>
+
+<ul>
+  <li>Stop inlining expanded content in package readmes <a href="https://github.com/devlooped/stunts/pull/228">#228</a> (@kzu)</li>
+</ul>
+
+<h2 id="v100-beta1-2026-09-28"><a href="https://github.com/devlooped/stunts/tree/v1.0.0-beta.1">v1.0.0-beta.1</a> (2026-09-28)</h2>
+
+<p><a href="https://github.com/devlooped/stunts/compare/v1.0.0-beta...v1.0.0-beta.1">Full Changelog</a></p>
+
+<p>:sparkles: Implemented enhancements:</p>
+
+<ul>
+  <li>Remove dependency on code fixers and refactorings from Roslyn internals <a href="https://github.com/devlooped/stunts/issues/132">#132</a></li>
+  <li>Avatar source generation processors should get updated compilation from context <a href="https://github.com/devlooped/stunts/issues/131">#131</a></li>
+  <li>Rename callBase to implementation <a href="https://github.com/devlooped/stunts/issues/108">#108</a></li>
+  <li>When emitting generated files, whitespace/newlines are missing <a href="https://github.com/devlooped/stunts/issues/98">#98</a></li>
+  <li>Make Stunts.DynamicProxy an explicit opt-in package <a href="https://github.com/devlooped/stunts/pull/218">#218</a> (@kzu)</li>
+  <li>Apply OSMF licensing and the original Stunts icon <a href="https://github.com/devlooped/stunts/pull/214">#214</a> (@kzu)</li>
+  <li>Restore the Stunts name <a href="https://github.com/devlooped/stunts/pull/211">#211</a> (@kzu)</li>
+  <li>Generate proxies without Roslyn internals. <a href="https://github.com/devlooped/stunts/pull/204">#204</a> (@kzu)</li>
+  <li>Improve design of syntax processors and introduce a driver class <a href="https://github.com/devlooped/stunts/pull/139">#139</a> (@kzu)</li>
+  <li>Use local function in pipleline invocation to avoid delegate allocation <a href="https://github.com/devlooped/stunts/pull/101">#101</a> (@atifaziz)</li>
+</ul>
+
+<p>:bug: Fixed bugs:</p>
+
+<ul>
+  <li>Add analysis error if target type has no public or protected constructor  <a href="https://github.com/devlooped/stunts/issues/129">#129</a></li>
+  <li>Source generators are reported as not supported under 16.10 preview <a href="https://github.com/devlooped/stunts/issues/125">#125</a></li>
+  <li>Error when packing because of mismatch of System.Runtime.CompilerServices.Unsafe <a href="https://github.com/devlooped/stunts/issues/117">#117</a></li>
+  <li>Nullable warnings when out/ref argument is nullable <a href="https://github.com/devlooped/stunts/issues/99">#99</a></li>
+  <li>Exclude Microsoft.CSharp from the static proxy tools <a href="https://github.com/devlooped/stunts/pull/226">#226</a> (@kzu)</li>
+  <li>👀 Fail if no visible constructors available <a href="https://github.com/devlooped/stunts/pull/130">#130</a> (@kzu)</li>
+</ul>
+
+<p>:hammer: Other:</p>
+
+<ul>
+  <li>Turn on build-time failures for .editorconfig violations <a href="https://github.com/devlooped/stunts/issues/60">#60</a></li>
+</ul>
+
+<p>:twisted_rightwards_arrows: Merged:</p>
+
+<ul>
+  <li>Drop the trailing newline in src/nuget.config <a href="https://github.com/devlooped/stunts/pull/223">#223</a> (@kzu)</li>
+  <li>Point the Ipsum comment at the devlooped/catbag source <a href="https://github.com/devlooped/stunts/pull/222">#222</a> (@kzu)</li>
+  <li>Retarget unit tests at net10.0 <a href="https://github.com/devlooped/stunts/pull/221">#221</a> (@kzu)</li>
+  <li>Drop the duplicate Solution Items folder from the solution <a href="https://github.com/devlooped/stunts/pull/220">#220</a> (@kzu)</li>
+  <li>Replace the alien mark with the purple helmet <a href="https://github.com/devlooped/stunts/pull/217">#217</a> (@kzu)</li>
+  <li>Clear NuGet, Roslyn, and xUnit warnings <a href="https://github.com/devlooped/stunts/pull/212">#212</a> (@kzu)</li>
+  <li>Bump to latest version of 3.10 pre-release <a href="https://github.com/devlooped/stunts/pull/149">#149</a> (@kzu)</li>
+  <li>Bump files with dotnet-file sync <a href="https://github.com/devlooped/stunts/pull/140">#140</a> (@kzu)</li>
+  <li>Update to latest NuGet protocol package <a href="https://github.com/devlooped/stunts/pull/135">#135</a> (@kzu)</li>
+  <li>🔄 dotnet-file sync <a href="https://github.com/devlooped/stunts/pull/120">#120</a> (@kzu)</li>
+  <li>🔄 dotnet-file sync <a href="https://github.com/devlooped/stunts/pull/114">#114</a> (@kzu)</li>
+  <li>Rename callBase to implementation <a href="https://github.com/devlooped/stunts/pull/109">#109</a> (@kzu)</li>
+  <li>🔄 dotnet-file sync <a href="https://github.com/devlooped/stunts/pull/107">#107</a> (@kzu)</li>
+  <li>Miscelaneous minor improvements <a href="https://github.com/devlooped/stunts/pull/100">#100</a> (@kzu)</li>
+  <li>🖆 Apply kzu/oss template via dotnet-file <a href="https://github.com/devlooped/stunts/pull/96">#96</a> (@kzu)</li>
+</ul>
+
+<h2 id="v100-beta-2021-01-19"><a href="https://github.com/devlooped/stunts/tree/v1.0.0-beta">v1.0.0-beta</a> (2021-01-19)</h2>
+
+<p><a href="https://github.com/devlooped/stunts/compare/v1.0.0-alpha...v1.0.0-beta">Full Changelog</a></p>
+
+<p>:sparkles: Implemented enhancements:</p>
+
+<ul>
+  <li>Simplify behavior execution delegate signature <a href="https://github.com/devlooped/stunts/issues/79">#79</a></li>
+  <li>Improve argument collection API <a href="https://github.com/devlooped/stunts/issues/74">#74</a></li>
+  <li>Allow modifying method invocation return values <a href="https://github.com/devlooped/stunts/issues/61">#61</a></li>
+  <li>Don’t force usage of a specific compiler toolset <a href="https://github.com/devlooped/stunts/issues/58">#58</a></li>
+  <li>Allow invoking base (virtual) method directly from IMethodInvocation <a href="https://github.com/devlooped/stunts/issues/56">#56</a></li>
+  <li>Add public API analyzers to improve API evolution <a href="https://github.com/devlooped/stunts/issues/55">#55</a></li>
+  <li>Provide simple property to opt out of static proxies <a href="https://github.com/devlooped/stunts/issues/48">#48</a></li>
+  <li>Remove dependency on Workspace API in the public API surface for avatar generator pipeline <a href="https://github.com/devlooped/stunts/issues/41">#41</a></li>
+  <li>⚙ Support multiple compiler toolsets <a href="https://github.com/devlooped/stunts/pull/59">#59</a> (@kzu)</li>
+</ul>
+
+<p>:bug: Fixed bugs:</p>
+
+<ul>
+  <li>IMethodReturn.Outputs does not contain the out parameters <a href="https://github.com/devlooped/stunts/issues/75">#75</a></li>
+  <li>Source generator fails when used in Visual Studio preview <a href="https://github.com/devlooped/stunts/issues/52">#52</a></li>
+</ul>
+
+<p>:hammer: Other:</p>
+
+<ul>
+  <li>Apply kzu/oss template for easier future maintenance <a href="https://github.com/devlooped/stunts/issues/49">#49</a></li>
+</ul>
+
+<p>:twisted_rightwards_arrows: Merged:</p>
+
+<ul>
+  <li>Add public API analyzers, minor improvement to delegates/naming <a href="https://github.com/devlooped/stunts/pull/80">#80</a> (@kzu)</li>
+  <li>Make arguments first-class and strong-typed <a href="https://github.com/devlooped/stunts/pull/78">#78</a> (@kzu)</li>
+  <li>⌛ Run preview install in parallel, wait on build <a href="https://github.com/devlooped/stunts/pull/70">#70</a> (@kzu)</li>
+  <li>⭮ devlooped/oss + ♡ sponsors <a href="https://github.com/devlooped/stunts/pull/69">#69</a> (@kzu)</li>
+  <li>🖆 Apply kzu/oss template via dotnet-file <a href="https://github.com/devlooped/stunts/pull/68">#68</a> (@kzu)</li>
+  <li>Make MethodReturn public to easily allow modifying return values <a href="https://github.com/devlooped/stunts/pull/67">#67</a> (@kzu)</li>
+  <li>◎ Simplify pipeline API by removing target, add callbase to IMethodInvocation <a href="https://github.com/devlooped/stunts/pull/57">#57</a> (@kzu)</li>
+  <li>Rename properties to enable compile-time and run-time avatars <a href="https://github.com/devlooped/stunts/pull/54">#54</a> (@kzu)</li>
+  <li>⥱ Ensure compiler matches generator dependencies <a href="https://github.com/devlooped/stunts/pull/53">#53</a> (@kzu)</li>
+  <li>🖆 Apply kzu/oss template via dotnet-file <a href="https://github.com/devlooped/stunts/pull/51">#51</a> (@kzu)</li>
+  <li>Use EnableCompiledAvatars/EnableDynamicAvatars properties <a href="https://github.com/devlooped/stunts/pull/50">#50</a> (@kzu)</li>
+  <li>Generator pipeline API rework to remove dep on SyntaxGenerator/Document <a href="https://github.com/devlooped/stunts/pull/42">#42</a> (@kzu)</li>
+  <li>Apply and enforce editorconfig rules during build <a href="https://github.com/devlooped/stunts/pull/40">#40</a> (@kzu)</li>
+  <li>Normalize indentation (spaces not tabs) <a href="https://github.com/devlooped/stunts/pull/34">#34</a> (@stakx)</li>
+  <li>Fix some typos <a href="https://github.com/devlooped/stunts/pull/33">#33</a> (@stakx)</li>
+  <li>Add docfx-powered site, rather than jekyll. <a href="https://github.com/devlooped/stunts/pull/32">#32</a> (@kzu)</li>
+</ul>
+
+<h2 id="v100-alpha-2020-11-04"><a href="https://github.com/devlooped/stunts/tree/v1.0.0-alpha">v1.0.0-alpha</a> (2020-11-04)</h2>
+
+<p><a href="https://github.com/devlooped/stunts/compare/v1.0.0-alpha.1...v1.0.0-alpha">Full Changelog</a></p>
+
+<p>:hammer: Other:</p>
+
+<ul>
+  <li>Add support for ref returns <a href="https://github.com/devlooped/stunts/issues/23">#23</a></li>
+  <li>Add proper namespace to generated types <a href="https://github.com/devlooped/stunts/issues/22">#22</a></li>
+  <li>Add support for nested types <a href="https://github.com/devlooped/stunts/issues/21">#21</a></li>
+</ul>
+
+<p>:twisted_rightwards_arrows: Merged:</p>
+
+<ul>
+  <li>Make sure breakpoints on scenario source are active in debugging <a href="https://github.com/devlooped/stunts/pull/31">#31</a> (@kzu)</li>
+  <li>Align DynamicProxy-based avatars with the static one <a href="https://github.com/devlooped/stunts/pull/30">#30</a> (@kzu)</li>
+  <li>Improve constants naming for code actions and split processing <a href="https://github.com/devlooped/stunts/pull/29">#29</a> (@kzu)</li>
+  <li>Add base class constructor overriding and interception <a href="https://github.com/devlooped/stunts/pull/28">#28</a> (@kzu)</li>
+  <li>Remove VB from all source generation since it’s not supported <a href="https://github.com/devlooped/stunts/pull/27">#27</a> (@kzu)</li>
+  <li>Add base virtual method call support <a href="https://github.com/devlooped/stunts/pull/26">#26</a> (@kzu)</li>
+  <li>Rename the project from Stunts to Avatar  <a href="https://github.com/devlooped/stunts/pull/25">#25</a> (@kzu)</li>
+  <li>Dev &gt; Main <a href="https://github.com/devlooped/stunts/pull/24">#24</a> (@kzu)</li>
+  <li>Make sure to also pack as buildTransitive for generators <a href="https://github.com/devlooped/stunts/pull/20">#20</a> (@kzu)</li>
+  <li>Dev &gt; Main <a href="https://github.com/devlooped/stunts/pull/19">#19</a> (@kzu)</li>
+  <li>Pack as SDK for extensibility scenarios <a href="https://github.com/devlooped/stunts/pull/18">#18</a> (@kzu)</li>
+  <li>Switch from attribute-based registration to partial static ctor <a href="https://github.com/devlooped/stunts/pull/17">#17</a> (@kzu)</li>
+  <li>Bundle DynamicProxy in Stunts itself for convenience <a href="https://github.com/devlooped/stunts/pull/16">#16</a> (@kzu)</li>
+  <li>Replace codecov token and move to secret <a href="https://github.com/devlooped/stunts/pull/15">#15</a> (@kzu)</li>
+  <li>Improvements to pipeline behavior and a few minor fixes <a href="https://github.com/devlooped/stunts/pull/13">#13</a> (@kzu)</li>
+  <li>Coverage again <a href="https://github.com/devlooped/stunts/pull/12">#12</a> (@kzu)</li>
+  <li>Build debug config on all builds, except for release <a href="https://github.com/devlooped/stunts/pull/11">#11</a> (@kzu)</li>
+  <li>Turn on and report coverage across all platforms <a href="https://github.com/devlooped/stunts/pull/10">#10</a> (@kzu)</li>
+  <li>Simplify how we calculate version suffix on GH CI <a href="https://github.com/devlooped/stunts/pull/9">#9</a> (@kzu)</li>
+  <li>Remove private HashCode and switch to BCL one <a href="https://github.com/devlooped/stunts/pull/8">#8</a> (@kzu)</li>
+  <li>Add GH pages pushing to main site repo <a href="https://github.com/devlooped/stunts/pull/7">#7</a> (@kzu)</li>
+</ul>
+
+<h2 id="v100-alpha1-2020-10-15"><a href="https://github.com/devlooped/stunts/tree/v1.0.0-alpha.1">v1.0.0-alpha.1</a> (2020-10-15)</h2>
+
+<p><a href="https://github.com/devlooped/stunts/compare/9fdd24a2c35651d2581af38209ae94e4398739a2...v1.0.0-alpha.1">Full Changelog</a></p>
+
+<p>:twisted_rightwards_arrows: Merged:</p>
+
+<ul>
+  <li>Fix tests reliability issues <a href="https://github.com/devlooped/stunts/pull/6">#6</a> (@kzu)</li>
+  <li>Upgrade to RC2, add another sample <a href="https://github.com/devlooped/stunts/pull/5">#5</a> (@kzu)</li>
+  <li>Add dependency resolution to the source generator itself <a href="https://github.com/devlooped/stunts/pull/3">#3</a> (@kzu)</li>
+  <li>Samples and docs <a href="https://github.com/devlooped/stunts/pull/2">#2</a> (@kzu)</li>
+  <li>Add sample test that passes in all supported platforms <a href="https://github.com/devlooped/stunts/pull/1">#1</a> (@kzu)</li>
+</ul>
+
+<p>* <em>This Changelog was automatically generated by <a href="https://github.com/github-changelog-generator/github-changelog-generator">github_changelog_generator</a></em></p>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">stunts maintained by <a href="https://github.com/devlooped">devlooped</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
